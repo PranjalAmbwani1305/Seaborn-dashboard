@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 df = pd.read_csv('covid_19_india.csv')
-print(df.columns())
+print(df.columns)
+
 df['Date'] = pd.to_datetime(df['Date'])
 
 st.title('COVID-19 Dashboard - India')
