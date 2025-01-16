@@ -22,20 +22,21 @@ col1, col2 = st.columns(2)
 
 with col1:
     fig, ax = plt.subplots(figsize=(10, 5))
+    
     sns.lineplot(data=state_data, x='Date', y='Confirmed', ax=ax, marker='o', color='b')
     ax.set_title(f'Time Series of Confirmed Cases in {selected_state}')
     ax.set_xlabel('Date')
     ax.set_ylabel('Confirmed Cases')
-    ax.set_yscale('log')  # Apply logarithmic scale
+    
+    ax.set_xscale('log')
+    
     st.pyplot(fig)
 
 with col2:
     state_data = state_data[['Date', 'Confirmed', 'Deaths']]
-    state_data['Confirmed_log'] = state_data['Confirmed'].apply(lambda x: np.log10(x) if x > 0 else 0)
-    state_data['Deaths_log'] = state_data['Deaths'].apply(lambda x: np.log10(x) if x > 0 else 0)
 
-    st.write("Timeline of Logarithmic Scaled Confirmed and Death Cases")
-    st.write(state_data[['Date', 'Confirmed_log', 'Deaths_log']].set_index('Date'))
+    st.write("Timeline of Confirmed and Death Cases")
+    st.write(state_data.set_index('Date'))
 
 st.write("Full Data Table")
 st.write(state_data.set_index('Date'))
