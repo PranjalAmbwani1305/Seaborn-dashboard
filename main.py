@@ -9,7 +9,7 @@ def load_data():
     df['Date'] = pd.to_datetime(df['Date'], format='%d/%m/%y')
     return df
   
-  df = load_data()
+ df = load_data()
 
 st.sidebar.title("State Filter")
 selected_state = st.sidebar.selectbox("Select a state", df['State'].unique())
