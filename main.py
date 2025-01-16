@@ -44,7 +44,7 @@ with col2:
     sns.set_style("whitegrid")
 
     fig, ax = plt.subplots(figsize=(10, 5))
-    sns.barplot(data=task_df, x="Duration", y="Task", orient="h", left="Start", ax=ax, palette='coolwarm')
+    sns.barplot(data=task_df, x="Duration", y="Task", orient="h", left="Start", ax=ax, color='skyblue')
     ax.set_xlabel("Time (Days)")
     ax.set_title("Task Timeline")
     
