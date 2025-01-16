@@ -36,10 +36,23 @@ with col2:
         "Duration": [3, 4, 2]
     })
     sns.set_style("whitegrid")
+    
     fig, ax = plt.subplots(figsize=(10, 5))
-    sns.barplot(data=task_df, x="Duration", y="Task", orient="h", left="Start", ax=ax, color='skyblue')
+    
+    for idx in range(len(task_df)):
+        task = task_df["Task"][idx]
+        start = task_df["Start"][idx]
+        duration = task_df["Duration"][idx]
+        
+        ax.plot([start, start + duration], [task, task], marker='o', color='skyblue', markersize=8, linewidth=4)
+        
     ax.set_xlabel("Time (Days)")
+    ax.set_ylabel("Task")
     ax.set_title("Task Timeline")
+    ax.set_ylim(-1, len(task_df))  # Adjust to fit all tasks
+    ax.set_xticks(range(0, max(task_df['Start'] + task_df['Duration']), 1))
+    ax.set_xlim(0, max(task_df['Start'] + task_df['Duration']) + 1)
+    
     st.pyplot(fig)
 
 st.write(f"Showing data for {selected_state}")
