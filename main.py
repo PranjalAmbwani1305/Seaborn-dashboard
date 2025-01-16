@@ -24,6 +24,11 @@ ax.set_xlabel('Date')
 ax.set_ylabel('Confirmed Cases')
 st.pyplot(fig)
 
-st.write("Timeline of Confirmed, Recovered, and Death Cases")
-state_data = state_data[['Date', 'Confirmed', 'Recovered', 'Deaths']]
-st.write(state_data.set_index('Date'))
+columns_to_check = ['Date', 'Confirmed', 'Recovered', 'Deaths']
+missing_columns = [col for col in columns_to_check if col not in state_data.columns]
+
+if missing_columns:
+    st.error(f"Missing columns: {', '.join(missing_columns)}")
+else:
+    state_data = state_data[columns_to_check]
+    st.write(state_data.set_index('Date'))
