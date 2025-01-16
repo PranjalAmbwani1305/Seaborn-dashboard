@@ -25,16 +25,14 @@ with col1:
     ax.set_title(f'Time Series of Confirmed Cases in {selected_state}')
     ax.set_xlabel('Date')
     ax.set_ylabel('Confirmed Cases')
-    ax.set_yscale('log')
+    ax.set_yscale('log')  # Apply logarithmic scale
     st.pyplot(fig)
 
 with col2:
     state_data = state_data[['Date', 'Confirmed', 'Deaths']]
-    state_data['Confirmed'] = state_data['Confirmed'].apply(lambda x: x if x > 0 else 1)
-    state_data['Deaths'] = state_data['Deaths'].apply(lambda x: x if x > 0 else 1)
+    state_data['Confirmed'] = state_data['Confirmed'].apply(lambda x: x if x > 0 else 1)  # Replace 0 with 1
+    state_data['Deaths'] = state_data['Deaths'].apply(lambda x: x if x > 0 else 1)  # Replace 0 with 1
 
     st.write("Timeline of Confirmed and Death Cases")
     st.write(state_data.set_index('Date'))
 
-st.write("Full Data Table")
-st.write(state_data.set_index('Date'))
