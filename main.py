@@ -2,6 +2,7 @@ import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
 df = pd.read_csv('covid_19_india.csv')
 
@@ -30,9 +31,11 @@ with col1:
 
 with col2:
     state_data = state_data[['Date', 'Confirmed', 'Deaths']]
-    state_data['Confirmed'] = state_data['Confirmed'].apply(lambda x: x if x > 0 else 1)  # Replace 0 with 1
-    state_data['Deaths'] = state_data['Deaths'].apply(lambda x: x if x > 0 else 1)  # Replace 0 with 1
+    state_data['Confirmed_log'] = state_data['Confirmed'].apply(lambda x: np.log10(x) if x > 0 else 0)
+    state_data['Deaths_log'] = state_data['Deaths'].apply(lambda x: np.log10(x) if x > 0 else 0)
 
-    st.write("Timeline of Confirmed and Death Cases")
-    st.write(state_data.set_index('Date'))
+    st.write("Timeline of Logarithmic Scaled Confirmed and Death Cases")
+    st.write(state_data[['Date', 'Confirmed_log', 'Deaths_log']].set_index('Date'))
 
+st.write("Full Data Table")
+st.write(state_data.set_index('Date'))
