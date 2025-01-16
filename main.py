@@ -12,7 +12,7 @@ st.title('COVID-19 Dashboard - India')
 
 states = df['State/UnionTerritory'].unique()
 selected_state = st.selectbox('Select a State:', states)
-
+state_data = df[df['State/UnionTerritory'] == selected_state]
 
 col1, col2 = st.columns(2)
 
@@ -34,7 +34,7 @@ with col2:
     st.write("Timeline of Confirmed and Death Cases")
     st.write(state_data.set_index('Date'))
 
-state_data = df[df['State/UnionTerritory'] == selected_state]
+
 
 st.write(f"Showing data for {selected_state}")
 st.write(state_data)
