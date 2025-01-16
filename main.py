@@ -44,13 +44,14 @@ with col2:
         start = task_df["Start"][idx]
         duration = task_df["Duration"][idx]
         
-        ax.plot([start, start + duration], [task, task], marker='o', color='skyblue', markersize=8, linewidth=4)
-        
+        ax.vlines(start, idx - 0.4, idx + 0.4, color='skyblue', linewidth=5)  # Vertical line at task start
+        ax.vlines(start + duration, idx - 0.4, idx + 0.4, color='skyblue', linewidth=5)  # Vertical line at task end
+        ax.text(start + duration / 2, idx, task, ha='center', va='center', fontsize=12, color='black')  # Task label in the middle
+    
     ax.set_xlabel("Time (Days)")
     ax.set_ylabel("Task")
     ax.set_title("Task Timeline")
     ax.set_ylim(-1, len(task_df))  # Adjust to fit all tasks
-    ax.set_xticks(range(0, max(task_df['Start'] + task_df['Duration']), 1))
     ax.set_xlim(0, max(task_df['Start'] + task_df['Duration']) + 1)
     
     st.pyplot(fig)
