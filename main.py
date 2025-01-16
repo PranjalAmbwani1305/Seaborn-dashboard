@@ -5,7 +5,6 @@ import pandas as pd
 
 df = pd.read_csv('covid_19_india.csv')
 
-
 df['Date'] = pd.to_datetime(df['Date'])
 
 st.title('COVID-19 Dashboard - India')
@@ -26,16 +25,16 @@ with col1:
     ax.set_title(f'Time Series of Confirmed Cases in {selected_state}')
     ax.set_xlabel('Date')
     ax.set_ylabel('Confirmed Cases')
+    ax.set_yscale('log')
     st.pyplot(fig)
 
 with col2:
-    
-    if 'Recovered' not in state_data.columns:
-        st.error("Recovered column is missing. Displaying available data for Confirmed and Deaths.")
-        state_data = state_data[['Date', 'Confirmed', 'Deaths']]  # Display only available columns
-    else:
-        state_data = state_data[['Date', 'Confirmed', 'Recovered', 'Deaths']]  
-    
-    st.write("Timeline of Confirmed, Recovered, and Death Cases")
+    state_data = state_data[['Date', 'Confirmed', 'Deaths']]
+    state_data['Confirmed'] = state_data['Confirmed'].apply(lambda x: x if x > 0 else 1)
+    state_data['Deaths'] = state_data['Deaths'].apply(lambda x: x if x > 0 else 1)
+
+    st.write("Timeline of Confirmed and Death Cases")
     st.write(state_data.set_index('Date'))
 
+st.write("Full Data Table")
+st.write(state_data.set_index('Date'))
