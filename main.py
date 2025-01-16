@@ -19,8 +19,10 @@ col1, col2 = st.columns(2)
 with col1:
     st.subheader(f'Time Series of Confirmed and Death Cases in {selected_state}')
     fig, ax = plt.subplots(figsize=(10, 5))
+    
     sns.lineplot(data=state_data, x='Date', y='Confirmed', ax=ax, marker='o', color='b', label='Confirmed Cases')
     sns.lineplot(data=state_data, x='Date', y='Deaths', ax=ax, marker='o', color='r', label='Death Cases')
+    
     ax.set_xlabel('Date')
     ax.set_ylabel('Cases')
     ax.set_title(f'Time Series of Confirmed and Death Cases in {selected_state}')
@@ -29,31 +31,37 @@ with col1:
     st.pyplot(fig)
 
 with col2:
-    st.subheader("Task Timeline")
-    task_df = pd.DataFrame({
-        "Task": ["Task 1", "Task 2", "Task 3"],
-        "Start": [0, 2, 5],
-        "Duration": [3, 4, 2]
-    })
-    sns.set_style("whitegrid")
+    st.subheader('COVID-19 Timeline')
     
+    timeline_data = pd.DataFrame({
+        'Date': [
+            '2020-01-30', '2020-03-24', '2021-01-16', '2022-04-01'
+        ],
+        'Event': [
+            'First COVID-19 Case in India',
+            'National Lockdown Starts',
+            'Vaccination Begins',
+            'Relaxation of Restrictions'
+        ]
+    })
+
+    timeline_data['Date'] = pd.to_datetime(timeline_data['Date'])
+
     fig, ax = plt.subplots(figsize=(10, 5))
     
-    for idx in range(len(task_df)):
-        task = task_df["Task"][idx]
-        start = task_df["Start"][idx]
-        duration = task_df["Duration"][idx]
-        
-        ax.vlines(start, idx - 0.4, idx + 0.4, color='skyblue', linewidth=5)  # Vertical line at task start
-        ax.vlines(start + duration, idx - 0.4, idx + 0.4, color='skyblue', linewidth=5)  # Vertical line at task end
-        ax.text(start + duration / 2, idx, task, ha='center', va='center', fontsize=12, color='black')  # Task label in the middle
+    for i, row in timeline_data.iterrows():
+        ax.plot([row['Date'], row['Date']], [0, 1], color='gray', linestyle='--', lw=1)
+        ax.text(row['Date'], 1.05, row['Event'], rotation=45, ha='right', va='bottom', fontsize=10)
     
-    ax.set_xlabel("Time (Days)")
-    ax.set_ylabel("Task")
-    ax.set_title("Task Timeline")
-    ax.set_ylim(-1, len(task_df))  # Adjust to fit all tasks
-    ax.set_xlim(0, max(task_df['Start'] + task_df['Duration']) + 1)
+    ax.scatter(timeline_data['Date'], [1] * len(timeline_data), color='red', s=50, label='Events')
+    ax.set_ylim(0, 1.5)
+    ax.set_xlim(timeline_data['Date'].min() - pd.Timedelta(days=30), timeline_data['Date'].max() + pd.Timedelta(days=30))
     
+    ax.set_title('COVID-19 Key Events Timeline')
+    ax.set_yticks([])
+    ax.set_xlabel('Date')
+    ax.legend()
+
     st.pyplot(fig)
 
 st.write(f"Showing data for {selected_state}")
