@@ -3,7 +3,6 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-@st.cache
 def load_data():
     df = pd.read_csv('covid_19_india.csv')
     df['Date'] = pd.to_datetime(df['Date'], format='%d/%m/%y')
