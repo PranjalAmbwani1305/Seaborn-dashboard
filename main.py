@@ -60,13 +60,13 @@ with col2:
     ]
     
     # Create a vertical timeline
-    fig, ax = plt.subplots(figsize=(5, 8))
+    fig, ax = plt.subplots(figsize=(4, 8))  # Adjust figure size
     for i, (d, e) in enumerate(zip(dates, events)):
         y = len(events) - i - 1  # Reverse order for top-to-bottom timeline
-        ax.plot([0.2, 0.8], [y, y], color='gray', linestyle='--', lw=1)
-        ax.scatter(0.2, y, color='red', s=100, zorder=5)  # Event marker
-        ax.text(0.25, y, e, fontsize=10, verticalalignment='center', horizontalalignment='left')  # Event label
-        ax.text(0.1, y, d.strftime('%b %Y'), fontsize=9, verticalalignment='center', horizontalalignment='right')  # Date
+        ax.plot([0.5, 0.5], [y - 0.4, y + 0.4], color='gray', linestyle='--', lw=1)  # Vertical line segment
+        ax.scatter(0.5, y, color='red', s=100, zorder=5)  # Event marker
+        ax.text(0.55, y, e, fontsize=10, verticalalignment='center', horizontalalignment='left')  # Event label
+        ax.text(0.45, y, d.strftime('%b %Y'), fontsize=9, verticalalignment='center', horizontalalignment='right')  # Date
 
     # Remove axes and style the chart
     ax.set_ylim(-1, len(events))
