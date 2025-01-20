@@ -81,10 +81,4 @@ st.write(f"### COVID-19 Data for {selected_state}")
 state_data_display = state_data[['Date', 'Confirmed', 'Deaths']].set_index('Date')
 st.dataframe(state_data_display)
 
-# Footer section
-st.markdown(
-    """
-    ---
-    **Created with ❤️ using Streamlit**
-    """
-)
+
