@@ -101,9 +101,3 @@ st.subheader(f"🧾 Full COVID-19 Data for {selected_state}")
 state_data_display = state_data[['Date', 'Confirmed', 'Deaths']].set_index('Date')
 st.dataframe(state_data_display.style.format("{:,}").highlight_max(axis=0, color="lightblue"))
 
-# Footer
-st.markdown("""
-    ---
-    **COVID-19 Data Source**: Ministry of Health and Family Welfare, India  
-    **Developer**: [Your Name](https://github.com/yourprofile)  
-""")
