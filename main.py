@@ -2,43 +2,48 @@ import streamlit as st
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 from datetime import date
 
-# Load and preprocess data
+# Load the dataset
 df = pd.read_csv('covid_19_india.csv')
 df['Date'] = pd.to_datetime(df['Date'])
 
-# Streamlit Dashboard
-st.title('COVID-19 Dashboard - India')
+# Page title
+st.set_page_config(page_title="COVID-19 Dashboard - India", layout="wide")
+st.title("COVID-19 Dashboard - India")
 
-# State selection
+# Sidebar for state selection
+st.sidebar.header("Filters")
 states = df['State/UnionTerritory'].unique()
-selected_state = st.selectbox('Select a State:', states)
+selected_state = st.sidebar.selectbox('Select a State:', states)
 
 # Filter data for the selected state
 state_data = df[df['State/UnionTerritory'] == selected_state]
 
-# Columns for visualization
+# Create two columns
 col1, col2 = st.columns(2)
 
-# Time Series Visualization
+# Column 1: Time series visualization
 with col1:
-    st.subheader(f'Time Series of Confirmed and Death Cases in {selected_state}')
+    st.subheader(f"Time Series of Confirmed and Death Cases in {selected_state}")
     fig, ax = plt.subplots(figsize=(10, 5))
     
+    # Plot confirmed and death cases
     sns.lineplot(data=state_data, x='Date', y='Confirmed', ax=ax, marker='o', color='b', label='Confirmed Cases')
     sns.lineplot(data=state_data, x='Date', y='Deaths', ax=ax, marker='o', color='r', label='Death Cases')
     
     ax.set_xlabel('Date')
-    ax.set_ylabel('Cases')
-    ax.set_title(f'Time Series of Confirmed and Death Cases in {selected_state}')
-    ax.set_yscale('log')
+    ax.set_ylabel('Cases (Log Scale)')
+    ax.set_yscale('log')  # Logarithmic scale for better visualization
+    ax.set_title(f"Time Series of COVID-19 Cases in {selected_state}")
     ax.legend()
+    
     st.pyplot(fig)
 
-# Vertical Timeline Visualization
+# Column 2: Vertical timeline
 with col2:
-    st.subheader('COVID-19 Key Events Timeline')
+    st.subheader("COVID-19 Key Events Timeline")
     
     # Event dates and descriptions
     dates = [
@@ -54,25 +59,24 @@ with col2:
         'Relaxation of Restrictions'
     ]
     
-    fig, ax = plt.subplots(figsize=(5, 10))
-    
-    # Plot vertical timeline
+    # Create a vertical timeline
+    fig, ax = plt.subplots(figsize=(5, 8))
     for i, (d, e) in enumerate(zip(dates, events)):
         y = len(events) - i - 1  # Reverse order for top-to-bottom timeline
-        ax.plot([0, 1], [y, y], color='gray', linestyle='--', lw=1)
-        ax.scatter(0.5, y, color='red', s=100, zorder=5)  # Event marker
-        ax.text(0.6, y, e, fontsize=10, verticalalignment='center', horizontalalignment='left')  # Event label
-        ax.text(-0.1, y, d.strftime('%b %Y'), fontsize=9, verticalalignment='center', horizontalalignment='right')  # Date
+        ax.plot([0.2, 0.8], [y, y], color='gray', linestyle='--', lw=1)
+        ax.scatter(0.2, y, color='red', s=100, zorder=5)  # Event marker
+        ax.text(0.25, y, e, fontsize=10, verticalalignment='center', horizontalalignment='left')  # Event label
+        ax.text(0.1, y, d.strftime('%b %Y'), fontsize=9, verticalalignment='center', horizontalalignment='right')  # Date
 
-    # Styling
+    # Remove axes and style the chart
     ax.set_ylim(-1, len(events))
-    ax.set_xlim(-0.2, 1.2)
-    ax.axis('off')  # Remove axes for clean design
+    ax.set_xlim(0, 1)
+    ax.axis('off')
     ax.set_title('COVID-19 Key Events Timeline', fontsize=12, pad=20)
 
     st.pyplot(fig)
 
-# Display state data
-st.write(f"Showing data for {selected_state}")
+# Additional table section
+st.write(f"### COVID-19 Data for {selected_state}")
 state_data_display = state_data[['Date', 'Confirmed', 'Deaths']].set_index('Date')
-st.write(state_data_display)
+st.dataframe(state_data_display)
