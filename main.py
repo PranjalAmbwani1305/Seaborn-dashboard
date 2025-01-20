@@ -39,21 +39,30 @@ else:
         axis=1
     )
 
+    # Debugging step: Check if there are events in the timeline
+    st.write(f"Total number of events: {len(key_dates)}")
+
     # Create a vertical timeline
     st.subheader(f"Significant Events in {selected_state}")
-    fig, ax = plt.subplots(figsize=(5, min(len(key_dates) * 1.5, 20)))  # Limit height to a reasonable size
+    
+    # Check if the number of events is reasonable for display
+    if len(key_dates) > 0:
+        fig, ax = plt.subplots(figsize=(5, min(len(key_dates) * 1.5, 20)))  # Limit height to a reasonable size
 
-    # Draw the timeline line
-    ax.vlines(0, 0, len(key_dates) - 1, color='gray', linestyles='dashed', lw=1)
+        # Draw the timeline line
+        ax.vlines(0, 0, len(key_dates) - 1, color='gray', linestyles='dashed', lw=1)
 
-    # Plot event markers and labels
-    for i, (date, event) in enumerate(zip(key_dates['Date'], key_dates['Event'])):
-        ax.scatter(0, i, color='red', s=100, zorder=5)
-        ax.text(0.2, i, event, fontsize=10, verticalalignment='center', horizontalalignment='left')
+        # Plot event markers and labels
+        for i, (date, event) in enumerate(zip(key_dates['Date'], key_dates['Event'])):
+            ax.scatter(0, i, color='red', s=100, zorder=5)
+            ax.text(0.2, i, event, fontsize=10, verticalalignment='center', horizontalalignment='left')
 
-    # Remove axes for a clean look
-    ax.axis('off')
-    ax.set_ylim(-1, len(key_dates))
-    ax.set_title("Timeline of Significant COVID-19 Events", fontsize=14, pad=20)
+        # Remove axes for a clean look
+        ax.axis('off')
+        ax.set_ylim(-1, len(key_dates))
+        ax.set_title("Timeline of Significant COVID-19 Events", fontsize=14, pad=20)
 
-    st.pyplot(fig)
+        # Display the plot
+        st.pyplot(fig)
+    else:
+        st.write("No events to display in the timeline.")
