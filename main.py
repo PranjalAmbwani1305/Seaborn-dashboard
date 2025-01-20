@@ -52,21 +52,35 @@ with col2:
     if not key_dates.empty:
         fig, ax = plt.subplots(figsize=(6, 12))
         
-        # Draw timeline
+        # Draw vertical timeline
         timeline_x = 0.5  # X-coordinate of the timeline
-        ax.plot([timeline_x] * len(key_dates), key_dates['Date'], color='gray', linestyle='--', lw=1)  # Timeline line
+        event_y_positions = key_dates['Date']
         
-        # Add markers and labels dynamically spaced
-        for idx, (d, confirmed, deaths) in enumerate(zip(key_dates['Date'], key_dates['Confirmed'], key_dates['Deaths'])):
+        ax.plot([timeline_x, timeline_x], [event_y_positions.min(), event_y_positions.max()], 
+                color='gray', linestyle='--', lw=1)  # Timeline line
+        
+        # Add markers and labels with dynamic spacing
+        previous_label_y = None  # To track the last label's position
+        label_spacing = pd.Timedelta(days=10)  # Minimum spacing between labels
+        
+        for d, confirmed, deaths in zip(key_dates['Date'], key_dates['Confirmed'], key_dates['Deaths']):
+            # Marker for each event
             ax.scatter(timeline_x, d, color='red', s=100, zorder=5)  # Event marker
-            # Adjust label position to prevent overlap
-            label_y = d + pd.Timedelta(days=2 * idx)  # Stagger labels by adding days
+            
+            # Adjust label position dynamically to prevent overlap
+            label_y = d
+            if previous_label_y is not None and (label_y - previous_label_y) < label_spacing:
+                label_y = previous_label_y + label_spacing
+            
             event_label = f"Confirmed: {confirmed:,}\nDeaths: {deaths:,}"
-            ax.text(timeline_x + 0.05, label_y, event_label, fontsize=10, verticalalignment='center', horizontalalignment='left')  # Event label
+            ax.text(timeline_x + 0.1, label_y, event_label, fontsize=9, 
+                    verticalalignment='center', horizontalalignment='left')  # Event label
+            
+            previous_label_y = label_y  # Update the last label's position
         
         # Format the plot
         ax.set_xlim(0.4, 0.6)
-        ax.set_ylim(state_data['Date'].min() - pd.Timedelta(days=30), state_data['Date'].max() + pd.Timedelta(days=30))
+        ax.set_ylim(event_y_positions.min() - pd.Timedelta(days=30), event_y_positions.max() + pd.Timedelta(days=30))
         ax.axis('off')
         ax.set_title("Significant Case Updates Timeline", fontsize=12, pad=20)
         
