@@ -49,24 +49,30 @@ with col1:
 # Column 2: Vertical timeline
 with col2:
     st.subheader(f"Key Events Timeline for {selected_state}")
-    fig, ax = plt.subplots(figsize=(5, 10))
-    
-    # Draw timeline
-    timeline_x = 0.5  # X-coordinate of the timeline
-    ax.plot([timeline_x] * len(key_dates), key_dates['Date'], color='gray', linestyle='--', lw=1)  # Timeline line
-    
-    for d, confirmed, deaths in zip(key_dates['Date'], key_dates['Confirmed'], key_dates['Deaths']):
-        ax.scatter(timeline_x, d, color='red', s=100, zorder=5)  # Event marker
-        event_label = f"Confirmed: {confirmed:,}\nDeaths: {deaths:,}"
-        ax.text(timeline_x + 0.1, d, event_label, fontsize=10, verticalalignment='center', horizontalalignment='left')  # Event label
-    
-    # Format the plot
-    ax.set_xlim(0, 1)
-    ax.set_ylim(state_data['Date'].min() - pd.Timedelta(days=30), state_data['Date'].max() + pd.Timedelta(days=30))
-    ax.axis('off')
-    ax.set_title("Significant Case Updates Timeline", fontsize=12, pad=20)
-    
-    st.pyplot(fig)
+    if not key_dates.empty:
+        fig, ax = plt.subplots(figsize=(6, 12))
+        
+        # Draw timeline
+        timeline_x = 0.5  # X-coordinate of the timeline
+        ax.plot([timeline_x] * len(key_dates), key_dates['Date'], color='gray', linestyle='--', lw=1)  # Timeline line
+        
+        # Add markers and labels dynamically spaced
+        for idx, (d, confirmed, deaths) in enumerate(zip(key_dates['Date'], key_dates['Confirmed'], key_dates['Deaths'])):
+            ax.scatter(timeline_x, d, color='red', s=100, zorder=5)  # Event marker
+            # Adjust label position to prevent overlap
+            label_y = d + pd.Timedelta(days=2 * idx)  # Stagger labels by adding days
+            event_label = f"Confirmed: {confirmed:,}\nDeaths: {deaths:,}"
+            ax.text(timeline_x + 0.05, label_y, event_label, fontsize=10, verticalalignment='center', horizontalalignment='left')  # Event label
+        
+        # Format the plot
+        ax.set_xlim(0.4, 0.6)
+        ax.set_ylim(state_data['Date'].min() - pd.Timedelta(days=30), state_data['Date'].max() + pd.Timedelta(days=30))
+        ax.axis('off')
+        ax.set_title("Significant Case Updates Timeline", fontsize=12, pad=20)
+        
+        st.pyplot(fig)
+    else:
+        st.write("No significant events detected for the selected state.")
 
 # Display the filtered data in a table
 st.write(f"### COVID-19 Data for {selected_state}")
