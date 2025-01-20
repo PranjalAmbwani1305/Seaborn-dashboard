@@ -29,6 +29,10 @@ key_dates = state_data[
 if key_dates.empty:
     st.write("No significant events found for the selected state.")
 else:
+    # Limit number of key dates plotted (optional)
+    max_events = 50  # Adjust this number based on your data and needs
+    key_dates = key_dates.head(max_events)
+
     # Prepare data for the timeline
     key_dates['Event'] = key_dates.apply(
         lambda row: f"Date: {row['Date'].strftime('%Y-%m-%d')}\nConfirmed: {row['Confirmed']:,}\nDeaths: {row['Deaths']:,}",
@@ -37,7 +41,7 @@ else:
 
     # Create a vertical timeline
     st.subheader(f"Significant Events in {selected_state}")
-    fig, ax = plt.subplots(figsize=(5, len(key_dates) * 1.5))
+    fig, ax = plt.subplots(figsize=(5, min(len(key_dates) * 1.5, 20)))  # Limit height to a reasonable size
 
     # Draw the timeline line
     ax.vlines(0, 0, len(key_dates) - 1, color='gray', linestyles='dashed', lw=1)
